@@ -1,0 +1,14 @@
+.container {
+	margin: auto;
+	max-width: 768px;
+	padding: 30px;
+}
+
+.album {
+	font-size: 0.8rem;
+}
+
+hr {
+	margin-bottom: 0.25rem;
+	margin-top: 0.5rem;
+}
