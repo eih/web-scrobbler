@@ -21,6 +21,4 @@ Connector.getTrackInfo = () => {
 	return { artist, album };
 };
 
-Connector.isPlaying = () => {
-	return $(Connector.playerSelector).hasClass('is-playing');
-};
+Connector.pauseButtonSelector = '.is-playing';

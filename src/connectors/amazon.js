@@ -1,9 +1,15 @@
 'use strict';
 
+const optionBtnSelector = '.buttonOption.main[title=Options]';
+
 Connector.playerSelector = '#dragonflyTransport .rightSide';
 
 Connector.getArtist = () => {
-	return $('.trackInfoContainer .trackArtist a, .trackInfoContainer .trackArtist span').attr('title');
+	// FIXME Use unified selector
+	return Util.getAttrFromSelectors([
+		'.trackInfoContainer .trackArtist a',
+		'.trackInfoContainer .trackArtist span',
+	], 'title');
 };
 
 Connector.getAlbumArtist = Connector.getArtist;
@@ -11,21 +17,32 @@ Connector.getAlbumArtist = Connector.getArtist;
 Connector.trackSelector = '.trackInfoContainer .trackTitle';
 
 Connector.getAlbum = () => {
-	if ($('.trackSourceLink a').attr('href').includes('albums')) {
-		return $('.trackSourceLink a').text();
+	const sourceLink = document.querySelector('.trackSourceLink a');
+	if (sourceLink) {
+		const sourceLinkUrl = sourceLink.getAttribute('href');
+		if (sourceLinkUrl && sourceLinkUrl.includes('albums')) {
+			return sourceLink.textContent;
+		}
 	}
 
-	if ($('tr.selectable.currentlyPlaying td.albumCell')) {
-		return $('tr.selectable.currentlyPlaying td.albumCell').attr('title');
+	const albumCellTitle = Util.getAttrFromSelectors('tr.selectable.currentlyPlaying td.albumCell', 'title');
+	if (albumCellTitle) {
+		return albumCellTitle;
 	}
 
-	if ($('.nowPlayingDetail img.albumImage')) {
-		return $('.nowPlayingDetail img.albumImage').attr('title');
+	const albumImageTitle = Util.getAttrFromSelectors('.nowPlayingDetail img.albumImage', 'title');
+	if (albumImageTitle) {
+		return albumImageTitle;
 	}
 
-	if ($('.trackSourceLink a').data('ui-click-action') === 'selectAlbum') {
-		return $('.trackSourceLink a').attr('title');
+	if (sourceLink) {
+		const clickAction = sourceLink.getAttribute('data-ui-click-action');
+		if (clickAction === 'selectAlbum') {
+			return sourceLink.getAttribute('title');
+		}
 	}
+
+	return null;
 };
 
 Connector.currentTimeSelector = '.songDuration.timeElapsed';
@@ -37,11 +54,8 @@ Connector.durationSelector = '#currentDuration';
 Connector.trackArtSelector = '.rightSide .albumArtWrapper img';
 
 Connector.getUniqueID = () => {
-	const optionsHref = $('.buttonOption.main[title=Options]').attr('href');
-	if (optionsHref) {
-		return optionsHref.replace(/[\W\w]+adriveId=/, '');
-	}
-	return null;
+	const optionsHref = Util.getAttrFromSelectors(optionBtnSelector, 'href');
+	return optionsHref && optionsHref.replace(/[\W\w]+adriveId=/, '');
 };
 
 Connector.applyFilter(MetadataFilter.getAmazonFilter());

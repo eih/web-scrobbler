@@ -21,6 +21,4 @@ Connector.getTrackInfo = () => {
 	return { artist, album };
 };
 
-Connector.isPlaying = () => {
-	return $('.playpause .fas.fa-pause').length > 0;
-};
+Connector.pauseButtonSelector = '.playpause .fas.fa-pause';
