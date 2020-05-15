@@ -239,22 +239,22 @@ class InfoPopupView {
 			const onClick = this.clickListeners[elementId].bind(this.infoPopup);
 
 			const element = document.getElementById(elementId);
-			element.onclick = () => {
+			element.addEventListener('click', () => {
 				onClick();
-			};
+			});
 		}
 
 		const inputs = document.getElementsByTagName(inputGenericId);
 		for (const input of inputs) {
-			input.onkeyup = (e) => {
-				const isSubmitAction = e.which === 13;
+			input.addEventListener('keyup', (e) => {
+				const isSubmitAction = e.key === 'Enter';
 
 				if (isSubmitAction) {
 					this.infoPopup.onEnterPressed();
 				} else {
 					this.infoPopup.onInputsChanged();
 				}
-			};
+			});
 		}
 
 		document.body.addEventListener('click', (e) => {
